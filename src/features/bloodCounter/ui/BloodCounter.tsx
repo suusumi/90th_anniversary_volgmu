@@ -13,7 +13,7 @@ export const BloodCounter: React.FC = () => {
             const waveInstance = new window.Wave(waveRef.current, {
                 height: waveHeight,
                 number: 1,
-                smooth: 50,
+                smooth: 10,
                 velocity: 1.6,
                 colors: ["#CC3D3F"],
                 opacity: 0.9,
