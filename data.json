@@ -1,0 +1,22 @@
+{
+  "stats": {
+    "collected": 20.6,
+    "remaining": 69.4,
+    "daysLeft": 90,
+    "donationCount": 15
+  },
+  "donors": [
+    {
+      "name": "Иванов Иван Иванович",
+      "amount": 0.5
+    },
+    {
+      "name": "Петров Петр Петрович",
+      "amount": 1.0
+    },
+    {
+      "name": "Сидорова Анна Сергеевна",
+      "amount": 0.7
+    }
+  ]
+}
