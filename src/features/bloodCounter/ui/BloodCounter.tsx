@@ -46,7 +46,7 @@ export const BloodCounter: React.FC = () => {
             <Typography
                 variant="h6"
                 sx={{
-                    marginBottom: "16px",
+                    marginBottom: "15px",
                     fontWeight: "bold",
                     position: "relative",
                     zIndex: 2, // Текст всегда поверх
@@ -75,7 +75,7 @@ export const BloodCounter: React.FC = () => {
                     bottom: 0,
                     left: 0,
                     width: "100%",
-                    height: "100px",
+                    height: "135px",
                     zIndex: 1, // Волна под текстом
                 }}
             ></div>
