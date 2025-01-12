@@ -1,34 +1,63 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { getBloodCounter } from "../model/getBloodCounter";
 
 export const BloodCounter: React.FC = () => {
     const waveRef = useRef<HTMLDivElement>(null);
-    const collectedBlood = getBloodCounter();
+    const [collectedBlood, setCollectedBlood] = useState<number | null>(null); // Состояние для данных
     const goal = 90; // Цель в литрах
 
     useEffect(() => {
-        if (waveRef.current && window.Wave) {
-            const waveHeight = Math.min(collectedBlood / goal, 1); // Высота волны как доля от цели
-            const waveInstance = new window.Wave(waveRef.current, {
-                height: waveHeight,
-                number: 1,
-                smooth: 10,
-                velocity: 1.6,
-                colors: ["#CC3D3F"],
-                opacity: 0.9,
-                position: "bottom",
-            });
-            if (waveInstance.animate) {
-                waveInstance.animate();
+        const fetchBloodCounter = async () => {
+            try {
+                const data = await getBloodCounter();
+                setCollectedBlood(data);
+            } catch (error) {
+                console.error("Ошибка при загрузке данных:", error);
             }
+        };
 
-            // Очистка анимации при размонтировании
-            return () => {
-                waveInstance.pause();
-            };
+        fetchBloodCounter();
+    }, []);
+
+    useEffect(() => {
+        // @ts-ignore
+        if (waveRef.current && typeof window !== "undefined" && window.Wave) {
+            if (collectedBlood !== null) {
+                const waveHeight = Math.min(collectedBlood / goal, 1); // Высота волны как доля от цели
+                // @ts-ignore
+                const waveInstance = new window.Wave(waveRef.current, {
+                    height: waveHeight,
+                    number: 1,
+                    smooth: 10,
+                    velocity: 1.6,
+                    colors: ["#CC3D3F"],
+                    opacity: 0.9,
+                    position: "bottom",
+                });
+
+                waveInstance.animate?.();
+
+                // Очистка анимации при размонтировании
+                return () => {
+                    waveInstance.pause();
+                };
+            }
         }
     }, [collectedBlood]);
+
+    if (collectedBlood === null) {
+        return (
+            <Box
+                sx={{
+                    textAlign: "center",
+                    padding: "20px",
+                }}
+            >
+                <Typography variant="h6">Загрузка данных...</Typography>
+            </Box>
+        );
+    }
 
     return (
         <Box
@@ -39,7 +68,7 @@ export const BloodCounter: React.FC = () => {
                 backgroundColor: "white",
                 padding: "15px",
                 textAlign: "center",
-
+                boxShadow: "0px 0px 200px rgba(0, 0, 0, 0.10)",
             }}
         >
             {/* Заголовок */}
