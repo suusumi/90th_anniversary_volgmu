@@ -48,13 +48,11 @@ export const ContributionCard: React.FC = () => {
                 padding: "15px",
                 textAlign: "center",
                 boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-                maxHeight: "200px",
-                margin: "auto",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                gap: "20px", // Расстояние между текстами
+                height: "100%",
             }}
         >
             {/* Заголовок */}
@@ -82,6 +80,7 @@ export const ContributionCard: React.FC = () => {
                     alignSelf: "flex-start", // Выровнять слева
                     fontSize: "16px",
                     fontWeight: "bold",
+                    marginBottom: "15px",
                 }}
             >
                 Сколько осталось собрать?
