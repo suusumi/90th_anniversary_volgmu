@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Box, Typography } from "@mui/material";
-import { getBloodCounter } from "../model/getBloodCounter";
+import React, {useEffect, useRef, useState} from "react";
+import {Box, Typography} from "@mui/material";
+import {getBloodCounter} from "../model/getBloodCounter";
 
 export const BloodCounter: React.FC = () => {
     const waveRef = useRef<HTMLDivElement>(null);
@@ -23,11 +23,13 @@ export const BloodCounter: React.FC = () => {
     useEffect(() => {
         // @ts-ignore
         if (waveRef.current && typeof window !== "undefined" && window.Wave) {
-            if (collectedBlood !== null) {
-                const waveHeight = Math.min(collectedBlood / goal, 1); // Высота волны как доля от цели
+            if (collectedBlood !== null && waveRef.current.parentElement) {
+                const parentHeight = waveRef.current.parentElement.offsetHeight; // Высота родительского контейнера
+                const waveHeight = Math.min(collectedBlood / goal, 1) * parentHeight; // Пропорциональная высота
+
                 // @ts-ignore
                 const waveInstance = new window.Wave(waveRef.current, {
-                    height: waveHeight,
+                    height: waveHeight / parentHeight, // Пропорция высоты для волны
                     number: 1,
                     smooth: 10,
                     velocity: 1.6,
@@ -38,13 +40,13 @@ export const BloodCounter: React.FC = () => {
 
                 waveInstance.animate?.();
 
-                // Очистка анимации при размонтировании
                 return () => {
                     waveInstance.pause();
                 };
             }
         }
     }, [collectedBlood]);
+
 
     if (collectedBlood === null) {
         return (
@@ -69,6 +71,8 @@ export const BloodCounter: React.FC = () => {
                 padding: "15px",
                 textAlign: "center",
                 boxShadow: "0px 0px 200px rgba(0, 0, 0, 0.10)",
+                height: {sm: "100%", md: "380px"},
+
             }}
         >
             {/* Заголовок */}
@@ -76,7 +80,6 @@ export const BloodCounter: React.FC = () => {
                 variant="h6"
                 sx={{
                     marginBottom: "15px",
-                    fontWeight: "bold",
                     position: "relative",
                     zIndex: 2, // Текст всегда поверх
                 }}
@@ -104,8 +107,9 @@ export const BloodCounter: React.FC = () => {
                     bottom: 0,
                     left: 0,
                     width: "100%",
-                    height: "135px",
+                    height: "100%",
                     zIndex: 1, // Волна под текстом
+
                 }}
             ></div>
         </Box>
