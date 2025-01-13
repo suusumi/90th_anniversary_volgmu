@@ -70,24 +70,38 @@ export const DaysCounter: React.FC = () => {
                 boxShadow: "0px 0px 200px rgba(0, 0, 0, 0.10)",
             }}
         >
-            <Box sx={{position: "relative", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <Gauge
-                    sx={{fontSize: "24px"}}
-                    innerRadius="70%"
-                    width={200}
-                    height={200}
-                    value={animatedValue}
-                    valueMax={90}
-                />
+            <Box sx={{position: "relative", display: "flex", justifyContent: "center", alignItems: "center", flexDirection:"column"}}>
                 <Typography
-                    variant="h4"
+                    variant="h6"
                     sx={{
-                        position: "absolute",
+                        marginBottom: "15px",
                         fontWeight: "bold",
+                        position: "relative",
+                        zIndex: 2, // Текст всегда поверх
                     }}
                 >
-                    {Math.round(animatedValue)} {/* Тут Gauge показывает 11,012 (тысячные значения), поэтому скрыто значение Gauge и тут используется Math для округления */}
+                    Осталось дней
                 </Typography>
+                <Box sx={{display:'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <Gauge
+                        sx={{fontSize: "24px"}}
+                        innerRadius="70%"
+                        width={200}
+                        height={200}
+                        value={animatedValue}
+                        valueMax={90}
+                    />
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            position: "absolute",
+                            fontWeight: "bold",
+                        }}
+                    >
+                        {Math.round(animatedValue)} {/* Тут Gauge показывает 11,012 (тысячные значения), поэтому скрыто значение Gauge и тут используется Math для округления */}
+                    </Typography>
+                </Box>
+
             </Box>
         </Box>
     );
