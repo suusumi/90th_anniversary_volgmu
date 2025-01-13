@@ -2,6 +2,8 @@ import {Box, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {getDaysCounter} from "../model/getDaysCounter.ts";
 import {Gauge} from "@mui/x-charts";
+import {gsap} from "gsap";
+import './DaysCounter.sass';
 
 export const DaysCounter: React.FC = () => {
     const [collectedDays, setCollectedDays] = useState<number | null>(null); // Значение дней
@@ -22,25 +24,16 @@ export const DaysCounter: React.FC = () => {
 
     useEffect(() => {
         if (collectedDays !== null) {
-            let animationFrame: number;
-            const duration = 1200; // Продолжительность анимации в миллисекундах
-            const startTime = performance.now();
+            const obj = {value: 0};
 
-            const animate = (currentTime: number) => {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1); // Ограничиваем progress в диапазоне [0, 1]
-                const value = Math.round(progress * collectedDays); // Вычисляем текущее значение
-                setAnimatedValue(value);
-
-                if (progress < 1) {
-                    animationFrame = requestAnimationFrame(animate);
-                }
-            };
-
-            animationFrame = requestAnimationFrame(animate);
-
-            // Очистка анимации при размонтировании
-            return () => cancelAnimationFrame(animationFrame);
+            gsap.to(obj, {
+                duration: 1.2,
+                value: collectedDays,
+                ease: "power3.inOut",
+                onUpdate: () => {
+                    setAnimatedValue(obj.value);
+                },
+            });
         }
     }, [collectedDays]);
 
@@ -77,18 +70,7 @@ export const DaysCounter: React.FC = () => {
                 boxShadow: "0px 0px 200px rgba(0, 0, 0, 0.10)",
             }}
         >
-            <Typography
-                variant="h6"
-                sx={{
-                    marginBottom: "15px",
-                    fontWeight: "bold",
-                    position: "relative",
-                    zIndex: 2,
-                }}
-            >
-                Осталось дней
-            </Typography>
-            <Box>
+            <Box sx={{position: "relative", display: "flex", justifyContent: "center", alignItems: "center"}}>
                 <Gauge
                     sx={{fontSize: "24px"}}
                     innerRadius="70%"
@@ -97,6 +79,15 @@ export const DaysCounter: React.FC = () => {
                     value={animatedValue}
                     valueMax={90}
                 />
+                <Typography
+                    variant="h4"
+                    sx={{
+                        position: "absolute",
+                        fontWeight: "bold",
+                    }}
+                >
+                    {Math.round(animatedValue)} {/* Тут Gauge показывает 11,012 (тысячные значения), поэтому скрыто значение Gauge и тут используется Math для округления */}
+                </Typography>
             </Box>
         </Box>
     );
