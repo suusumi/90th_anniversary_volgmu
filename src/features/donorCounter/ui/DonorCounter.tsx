@@ -1,11 +1,14 @@
 import { Box, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { getDonationCount } from "../model/getDonationCount.ts";
 
 export const DonorCounter: React.FC = () => {
-    const [donationCount, setDonationCount] = useState<number | null>(null); // Значение количества доноров
-    const [animatedValue, setAnimatedValue] = useState(0); // Значение для анимации
+    const [donationCount, setDonationCount] = useState<number | null>(null);
+    const [animatedValue, setAnimatedValue] = useState(0);
+    const [isVisible, setIsVisible] = useState(false);
+    const [hasAnimated, setHasAnimated] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchDonationCount = async () => {
@@ -21,7 +24,38 @@ export const DonorCounter: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (donationCount !== null) {
+        const setupObserver = () => {
+            if (containerRef.current) {
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                setIsVisible(true);
+                            }
+                        });
+                    },
+                    { threshold: 0.5 }
+                );
+
+                observer.observe(containerRef.current);
+
+                return () => observer.disconnect();
+            } else {
+                console.error("Container Ref is null!");
+            }
+        };
+
+        const interval = setInterval(() => {
+            setupObserver();
+            if (containerRef.current) clearInterval(interval);
+        }, 100);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    // Анимация
+    useEffect(() => {
+        if (donationCount !== null && isVisible && !hasAnimated) {
             const obj = { value: 0 };
 
             gsap.to(obj, {
@@ -29,11 +63,20 @@ export const DonorCounter: React.FC = () => {
                 value: donationCount,
                 ease: "power3.inOut",
                 onUpdate: () => {
-                    setAnimatedValue(Math.round(obj.value)); // Анимация с округлением
+                    setAnimatedValue(Math.round(obj.value));
                 },
             });
+
+            setHasAnimated(true);
         }
-    }, [donationCount]);
+    }, [donationCount, isVisible, hasAnimated]);
+
+    // Логирование
+    useEffect(() => {
+        console.log("Donation Count:", donationCount);
+        console.log("Is Visible:", isVisible);
+        console.log("Container Ref:", containerRef.current);
+    }, [donationCount, isVisible, containerRef.current]);
 
     if (donationCount === null) {
         return (
@@ -52,56 +95,54 @@ export const DonorCounter: React.FC = () => {
     }
 
     return (
-        <Box
-            sx={{
-                position: "relative",
-                overflow: "hidden",
-                borderRadius: "16px",
-                backgroundColor: "white",
-                padding: "15px",
-                textAlign: "center",
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column",
-                // height: "100%",
-                boxShadow: "0px 0px 200px rgba(0, 0, 0, 0.10)",
-            }}
-        >
-            {/* Заголовок */}
-            <Typography
-                variant="h6"
-                sx={{
-                    marginBottom: "15px",
-                    position: "relative",
-                    zIndex: 2, // Текст всегда поверх
-                }}
-            >
-                Столько раз сдали кровь
-            </Typography>
-
-            {/* Анимационный круг */}
+        <div ref={containerRef} style={{ minHeight: "200px" }}>
             <Box
                 sx={{
-                    width: "140px",
-                    height: "140px",
-                    borderRadius: "50%",
-                    backgroundColor: "#CCFFE9", // Светло-зеленый фон
+                    position: "relative",
+                    overflow: "hidden",
+                    borderRadius: "25px",
+                    backgroundColor: "white",
+                    padding: "15px",
+                    textAlign: "center",
                     display: "flex",
-                    justifyContent: "center",
                     alignItems: "center",
-                    boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
+                    flexDirection: "column",
+                    boxShadow: "0px 0px 200px rgba(0, 0, 0, 0.10)",
                 }}
             >
                 <Typography
-                    variant="h5"
+                    variant="h6"
                     sx={{
-                        color: "#10633F", // Темно-зеленый цвет текста
-                        fontWeight: "bold",
+                        marginBottom: "15px",
+                        position: "relative",
+                        zIndex: 2,
                     }}
                 >
-                    {animatedValue}
+                    Столько раз сдали кровь
                 </Typography>
+
+                <Box
+                    sx={{
+                        width: "140px",
+                        height: "140px",
+                        borderRadius: "50%",
+                        backgroundColor: "#CCFFE9",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <Typography
+                        variant="h5"
+                        sx={{
+                            color: "#10633F",
+                            fontWeight: "bold",
+                        }}
+                    >
+                        {animatedValue}
+                    </Typography>
+                </Box>
             </Box>
-        </Box>
+        </div>
     );
 };
