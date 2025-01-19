@@ -66,7 +66,7 @@ export const BloodCounter: React.FC = () => {
             sx={{
                 position: "relative",
                 overflow: "hidden",
-                borderRadius: "16px",
+                borderRadius: "25px",
                 backgroundColor: "white",
                 padding: "15px",
                 textAlign: "center",
