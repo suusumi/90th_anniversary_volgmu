@@ -30,7 +30,7 @@ export const InformationText = () => {
     }, []);
 
     return (
-        <Container maxWidth="md">
+        <Container maxWidth="lg">
             <Box
                 ref={textRef}
                 sx={{
@@ -41,13 +41,34 @@ export const InformationText = () => {
                 }}
             >
                 <Typography className="line"
-                            sx={{marginBottom: {md: "60px", xs: "45px"}, lineHeight: "1.3", fontSize: {md: '60px', xs: '40px'}}}>
-                    Цель проекта - собрать 90 литров донорской крови <br/> для мира во всем мире 🤩
+                            sx={{
+                                lineHeight: "1.3",
+                                fontSize: {md: '60px', xs: '30px'},
+                                fontFamily: 'Manrope',
+                                textAlign: {xs: 'center', md: 'left'},
+                                marginBottom: {md: "60px", xs: "45px"}
+                            }}>
+                    Цель проекта - собрать 90 литров донорской крови 🤩
                 </Typography>
 
+
                 <Typography variant="h2" className="line"
-                            sx={{marginBottom: "60px", lineHeight: "1.3", fontSize: {md: '60px', xs: '40px'}}}>
-                    Мы просим каждого сдать кровь в центре переливания крови: <br/> ул. Голубинская 9А, получатель -
+                            sx={{
+                                marginBottom: "40px",
+                                lineHeight: "1.3",
+                                fontSize: {md: '60px', xs: '30px'},
+                                textAlign: {xs: 'center', md: 'left'}
+                            }}>
+                    Мы просим каждого сдать кровь в центре переливания крови:
+                </Typography>
+                <Typography variant="h2" className="line"
+                            sx={{
+                                marginBottom: "60px",
+                                lineHeight: "1.3",
+                                fontSize: {md: '60px', xs: '30px'},
+                                textAlign: {xs: 'center', md: 'left'}
+                            }}>
+                    ул. Голубинская 9А, получатель -
                     ВолгГМУ 🙌
                 </Typography>
 
