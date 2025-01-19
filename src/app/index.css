@@ -12,6 +12,13 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Austin Cyr';
+    src: url('../assets/fonts/austin/AustinCyr-Roman.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
 :root {
     font-family: Manrope, sans-serif;
     background-color: #f6f5f4;
