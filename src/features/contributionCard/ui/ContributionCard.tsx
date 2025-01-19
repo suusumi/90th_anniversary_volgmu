@@ -1,27 +1,54 @@
-import { Box, Typography } from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import React, {useEffect, useRef, useState} from "react";
 import gsap from "gsap";
 import {getRemainingBlood} from "../model/getRemainingBlood.ts";
 
 export const ContributionCard: React.FC = () => {
-    const containerRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const [remainingBlood, setRemainingBlood] = useState<number | null>(null);
+    const [isVisible, setIsVisible] = useState(false); // Состояние для видимости компонента
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            const messages = gsap.utils.toArray(".message");
+        // Наблюдение за видимостью компонента
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true);
+                    }
+                });
+            },
+            {threshold: 0.5} // 50% видимости компонента
+        );
 
-            gsap.from(messages, {
-                opacity: 0,
-                y: 30,
-                duration: 1.2,
-                ease: "power3.out",
-                stagger: 0.5, // Задержка между элементами
-            });
-        }, containerRef);
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
 
-        return () => ctx.revert();
+        return () => {
+            if (containerRef.current) {
+                observer.unobserve(containerRef.current);
+            }
+        };
     }, []);
+
+    useEffect(() => {
+        if (isVisible) {
+            const ctx = gsap.context(() => {
+                const messages = gsap.utils.toArray(".message");
+
+                gsap.from(messages, {
+                    opacity: 0,
+                    y: 30,
+                    duration: 1.2,
+                    ease: "power3.out",
+                    stagger: 0.5, // Задержка между элементами
+                });
+            }, containerRef);
+
+            return () => ctx.revert();
+        }
+    }, [isVisible]);
 
     useEffect(() => {
         // Загрузка данных о "remaining"
@@ -43,7 +70,7 @@ export const ContributionCard: React.FC = () => {
             sx={{
                 position: "relative",
                 overflow: "hidden",
-                borderRadius: "16px",
+                borderRadius: "25px",
                 backgroundColor: "white",
                 padding: "15px",
                 textAlign: "center",
@@ -57,7 +84,6 @@ export const ContributionCard: React.FC = () => {
         >
             {/* Заголовок */}
             <Typography
-
                 variant="h6"
                 sx={{
                     marginBottom: "15px",
@@ -72,12 +98,12 @@ export const ContributionCard: React.FC = () => {
             <Box
                 className="message"
                 sx={{
-                    backgroundColor: "#CCFFE9", // Светло-зелёный цвет
-                    color: "#10633F", // Тёмно-зелёный текст
+                    backgroundColor: "#CCFFE9",
+                    color: "#10633F",
                     padding: "10px 20px",
                     borderRadius: "20px",
                     maxWidth: "80%",
-                    alignSelf: "flex-start", // Выровнять слева
+                    alignSelf: "flex-start",
                     fontSize: "16px",
                     fontWeight: "bold",
                     marginBottom: "15px",
@@ -102,12 +128,12 @@ export const ContributionCard: React.FC = () => {
                     gap: "5px",
                 }}
             >
-                <Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>
+                <Typography sx={{fontSize: "16px", fontWeight: "bold", fontFamily: "Manrope"}}>
                     {remainingBlood !== null
                         ? `${remainingBlood.toFixed(1)} литров!`
                         : "Загрузка..."}
                 </Typography>
-                <Typography component="span" sx={{ fontSize: "16px" }}>
+                <Typography component="span" sx={{fontSize: "16px"}}>
                     🔥🔥🔥
                 </Typography>
             </Box>
