@@ -1,15 +1,21 @@
-import {Box, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import {BloodCounter} from "../../../features/bloodCounter";
 import {InformationText} from "../../../features/informationText";
 import {DaysCounter} from "../../../features/daysCounter";
 import {ContributionCard} from "../../../features/contributionCard";
 import {DonorCounter} from "../../../features/donorCounter/ui/DonorCounter.tsx";
+import {TitleBlock} from "../../../features/titleBlock";
+import {PersonsTable} from "../../../features/personsTable";
 
 export const MainPage = () => {
     return (
         <>
-            <Box sx={{marginBottom: '175px'}}>
+
+            <Box sx={{marginBottom: {xs: '60px', md: '175px'}, marginTop: {xs: '100px', md: '175px'}}}>
+                <TitleBlock/>
+            </Box>
+            <Box id="information-text" sx={{marginBottom: {xs: '60px',md: '175px'}}}>
                 <InformationText/>
             </Box>
             <Grid container spacing={2} sx={{height: "100%"}}>
@@ -20,6 +26,7 @@ export const MainPage = () => {
 
                 {/* Правая колонка */}
                 <Grid
+                    id="statistic"
                     container
                     size={{xs: 12, md: 6}}
                     direction="column"
@@ -40,6 +47,10 @@ export const MainPage = () => {
                             <DonorCounter/>
                         </Grid>
                     </Grid>
+
+                </Grid>
+                <Grid size={{xs: 12, md: 12}} sx={{flex: 1}}>
+                    <PersonsTable/>
                 </Grid>
             </Grid>
         </>
