@@ -7,6 +7,7 @@ import {ContributionCard} from "../../../features/contributionCard";
 import {DonorCounter} from "../../../features/donorCounter/ui/DonorCounter.tsx";
 import {TitleBlock} from "../../../features/titleBlock";
 import {PersonsTable} from "../../../features/personsTable";
+import {EventStartCounter} from "../../../features/eventStartCounter";
 
 export const MainPage = () => {
     return (
@@ -14,8 +15,11 @@ export const MainPage = () => {
 
             <Box sx={{marginBottom: {xs: '60px', md: '175px'}, marginTop: {xs: '100px', md: '175px'}}}>
                 <TitleBlock/>
+                <Box sx={{marginTop: {xs: '30px', md: '40px'}}}>
+                    <EventStartCounter/>
+                </Box>
             </Box>
-            <Box id="information-text" sx={{marginBottom: {xs: '60px',md: '175px'}}}>
+            <Box id="information-text" sx={{marginBottom: {xs: '60px', md: '175px'}}}>
                 <InformationText/>
             </Box>
             <Grid container spacing={2} sx={{height: "100%"}}>
